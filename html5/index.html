@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <title> Jump Block </title>
+  <link rel="stylesheet" property="stylesheet" type="text/css" href="css/style.css"/>
+</head>
+
+<body>
+<header>
+  <br>
+  Press Tab to Begin, AWSD to move.
+  <br>
+</header>
+
+  <canvas id="main" width= "600" height="360" style="border: 1px solid green" tabindex="0" id="main">
+    Your browser doesn't support HTML5.
+  </canvas>
+
+    <script>
+
+        var c = document.getElementById("main");
+        c.addEventListener('keydown', doKeyDown, true);
+
+        // Initial Size of the Box
+
+        var boxWidth = 30;
+        var boxHeight = 30;
+
+        // Initail Placment of the Box
+        var x = 275;
+        var y = 310;
+
+        var ctx = c.getContext("2d");
+        ctx.fillRect(x,y, boxWidth, boxHeight);
+
+
+        function doKeyDown(e)
+        {
+
+          // D Key (Right)
+
+          if (e.keyCode == 68) {
+            clearCanvas();
+            x = x + 10;
+            ctx.fillRect(x,y, boxWidth, boxHeight);
+          }
+
+          // A Key (LEFT)
+
+          if (e.keyCode == 65) {
+            clearCanvas();
+            x = x - 10;
+            ctx.fillRect(x,y, boxWidth, boxHeight);
+          }
+
+          // S key (Down)
+
+          if (e.keyCode == 83) {
+            clearCanvas();
+            y = y + 10;
+            ctx.fillRect(x,y, boxWidth, boxHeight);
+          }
+
+          // W key (Up)
+
+          if (e.keyCode == 87) {
+            clearCanvas();
+            y = y - 10;
+            ctx.fillRect(x,y, boxWidth, boxHeight);
+          }
+        }
+
+        function clearCanvas() {
+          c.width = c.width;
+        }
+
+    </script>
+
+</body>
+</html>
