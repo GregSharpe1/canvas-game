@@ -1,76 +1,84 @@
-var c = document.getElementById("main");
-c.addEventListener('keydown', doKeyDown, true);
+(function() {
+    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    window.requestAnimationFrame = requestAnimationFrame;
+})();
 
-// Initial Size of the Box
+var canvas = document.getElementById("main"),
+    ctx = canvas.getContext("2d"),
+    width = 500,
+    height = 300,
+    player = {
+      x : width/2,
+      y : height - 5,
+      width : 5,
+      height : 5,
+      speed: 3,
+      velX: 0,
+      velY: 0,
+      jumping: false
+    },
+    keys = [],
+    friction = 0.8,
+    gravity = 0.2;
 
-var boxWidth = 30;
-var boxHeight = 30;
+canvas.width = width;
+canvas.height = height;
 
-// Initail Placment of the Box
-var x = 275;
-var y = 310;
+function update(){
+  // check keys
+    if (keys[87] || keys[32] || keys[38] ) {
+        // up arrow or space
+      if(!player.jumping){
+       player.jumping = true;
+       player.velY = -player.speed*2;
+      }
+    }
+    if (keys[39] || keys[68] ) {
+        // right arrow
+        if (player.velX < player.speed) {
+            player.velX++;
+         }
+    }
+    if (keys[37] || keys[65]) {
+        // left arrow
+        if (player.velX > -player.speed) {
+            player.velX--;
+        }
+    }
 
-// Boolean for Jumping
-var jumping = false;
+    player.velX *= friction;
 
-var ctx = c.getContext("2d");
-ctx.fillRect(x,y, boxWidth, boxHeight);
+    player.velY += gravity;
 
+    player.x += player.velX;
+    player.y += player.velY;
 
-function doKeyDown(e)
-{
+    if (player.x >= width-player.width) {
+        player.x = width-player.width;
+    } else if (player.x <= 0) {
+        player.x = 0;
+    }
 
-  // D Key (Right)
+    if(player.y >= height-player.height){
+        player.y = height - player.height;
+        player.jumping = false;
+    }
 
-  if (e.keyCode == 68) {
-    clearCanvas();
-    x = x + 10;
-    ctx.fillRect(x,y, boxWidth, boxHeight);
-  }
+  ctx.clearRect(0,0,width,height);
+  ctx.fillStyle = "red";
+  ctx.fillRect(player.x, player.y, player.width, player.height);
 
-  // A Key (LEFT)
-
-  if (e.keyCode == 65) {
-    clearCanvas();
-    x = x - 10;
-    ctx.fillRect(x,y, boxWidth, boxHeight);
-  }
-
-  // S key (Down)
-
-  if (e.keyCode == 83) {
-    clearCanvas();
-    y = y + 10;
-    ctx.fillRect(x,y, boxWidth, boxHeight);
-  }
-
-  // W key (Up)
-
-  if (e.keyCode == 87) {
-    clearCanvas();
-    y = y - 50  ;
-    ctx.fillRect(x,y, boxWidth, boxHeight);
-
-  }
+  requestAnimationFrame(update);
 }
 
-// function jump() {
-//
-//   if (!jumping) {
-//     jumping = true;
-//     y = y + 50;
-//     ctx.fillRect(x,y boxWidth, boxHeight);
-//     setTimeout(land, 500);
-//   }
-// }
-//
-// function land() {
-//   jumping = false;
-//   y = y;
-//   ctx.fillRect(x,y,boxWidth, boxHeight);
-// }
-//
+document.body.addEventListener("keydown", function(e) {
+    keys[e.keyCode] = true;
+});
 
-function clearCanvas() {
-  c.width = c.width;
-}
+document.body.addEventListener("keyup", function(e) {
+    keys[e.keyCode] = false;
+});
+
+window.addEventListener("load",function(){
+    update();
+});
