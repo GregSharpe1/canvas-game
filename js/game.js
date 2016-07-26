@@ -1,75 +1,52 @@
+// This will request which browser!
 (function() {
     var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
     window.requestAnimationFrame = requestAnimationFrame;
 })();
 
-var canvas = document.getElementById("main"),
-    ctx = canvas.getContext("2d"),
-    width = 500,
-    height = 300,
-    player = {
-      x : width/2,
-      y : height - 5,
-      width : 5,
-      height : 5,
-      speed: 3,
-      velX: 0,
-      velY: 0,
-      jumping: false
-    },
-    keys = [],
-    friction = 0.8,
-    gravity = 0.2;
+// Setup of the game
 
-canvas.width = width;
-canvas.height = height;
+// Create the canvas from the given element in the HTML
+var canvas = document.getElementById("main");
+// Give the canvas 2D context
+var context = canvas.getContext("2d");
 
-function update(){
-  // check keys
-    if (keys[87] || keys[32] || keys[38] ) {
-        // up arrow or space
-      if(!player.jumping){
-       player.jumping = true;
-       player.velY = -player.speed*2;
-      }
-    }
-    if (keys[39] || keys[68] ) {
-        // right arrow
-        if (player.velX < player.speed) {
-            player.velX++;
-         }
-    }
-    if (keys[37] || keys[65]) {
-        // left arrow
-        if (player.velX > -player.speed) {
-            player.velX--;
-        }
-    }
+// Set the canvas with boundaries
+// to allow the user not to go outside
+// the boundaries
+canvas.height = 360;
+canvas.width = 600;
 
-    player.velX *= friction;
+var keys = [];
 
-    player.velY += gravity;
+// Create the player giving some config
+var player {
+  // this is where the player will start
+  x : 50,
+  y : height - 30,
+  height : 30,
+  width : 30
+}
 
-    player.x += player.velX;
-    player.y += player.velY;
+// This function will move the player.
 
-    if (player.x >= width-player.width) {
-        player.x = width-player.width;
-    } else if (player.x <= 0) {
-        player.x = 0;
-    }
+function update() {
 
-    if(player.y >= height-player.height){
-        player.y = height - player.height;
-        player.jumping = false;
-    }
+  if ( keys[87] || keys[38])
+  {
+    player.y = player.y - 5;
+  }
 
   ctx.clearRect(0,0,width,height);
   ctx.fillStyle = "red";
   ctx.fillRect(player.x, player.y, player.width, player.height);
 
   requestAnimationFrame(update);
+
 }
+
+
+
 
 document.body.addEventListener("keydown", function(e) {
     keys[e.keyCode] = true;
