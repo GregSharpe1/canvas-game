@@ -36,23 +36,29 @@ canvas.width = width;
 
 function update() {
 
+  // W
   if (keys[87]) {
-
     player.y = player.y - 10;
-
   }
-
+  // S
   if (keys[83]){
     player.y = player.y + 10;
   }
-
+  // A
   if (keys[65]) {
     player.x = player.x - 10;
   }
-
+  // D
   if (keys[68]) {
     player.x = player.x + 10;
   }
+
+  var erase_image = new Image();
+  erase_image.src = '../img/kangroo.jpg';
+  erase_image.onload = function()
+  {
+     context.drawImage(erase_image, 78, 19);
+   }
 
 
   context.clearRect(0,0,width,height);
