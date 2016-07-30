@@ -5,6 +5,10 @@
 })();
 
 // Setup of the game
+var img = new Image(); //creating the instance of the image
+img.src = "img/kangaroo.jpg";
+
+
 
 // Create the canvas from the given element in the HTML
 var canvas = document.getElementById("main"),
@@ -23,18 +27,17 @@ var canvas = document.getElementById("main"),
     player = {
   // this is where the player will start
       x : 50,
-      y : height - 30,
+      y : height - 45,
       height : 30,
       width : 30
     },
+
     keys = [];
 
 canvas.height = height;
 canvas.width = width;
 
-// This function will move the player.
-
-function update() {
+function processUserInput() {
 
   // W
   if (keys[87]) {
@@ -53,22 +56,16 @@ function update() {
     player.x = player.x + 10;
   }
 
-  var erase_image = new Image();
-  erase_image.src = '../img/kangroo.jpg';
-  erase_image.onload = function()
-  {
-     context.drawImage(erase_image, 78, 19);
-   }
 
-
+  // Clear the context
   context.clearRect(0,0,width,height);
-  context.fillStyle = "red";
-  context.fillRect(player.x, player.y, player.width, player.height);
+  // drawing the character
+  context.drawImage(img, player.x, player.y);
 
-  requestAnimationFrame(update);
+
+  requestAnimationFrame(processUserInput);
 
 }
-
 
 
 
@@ -81,5 +78,6 @@ document.body.addEventListener("keyup", function(e) {
 });
 
 window.addEventListener("load",function(){
-    update();
+    processUserInput();
+
 });
