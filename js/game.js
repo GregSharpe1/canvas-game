@@ -26,35 +26,61 @@ var canvas = document.getElementById("main"),
 // Create the player giving some config
     player = {
   // this is where the player will start
-      x : 50,
-      y : height - 45,
-      height : 30,
-      width : 30
+      x : 30,
+      y : height - 20,
+      height : 45,
+      width : 30,
+      speed : 2,
+      velX : 0,
+      velY : 0,
+      jumping : false
     },
 
-    keys = [];
+    keys = [],
+    friction = 0.1,
+    gravity = 0.1;
 
-canvas.height = height;
 canvas.width = width;
+canvas.height = height;
+
 
 function processUserInput() {
 
   // W
   if (keys[87]) {
-    player.y = player.y - 10;
+    if(!player.jumping){
+      player.jumping = true;
+      player.velY = -player.speed*2;
+    }
   }
   // S
   if (keys[83]){
-    player.y = player.y + 10;
+    player.y = player.y + 3;
   }
   // A
   if (keys[65]) {
-    player.x = player.x - 10;
+    player.x = player.x - 3;
   }
   // D
   if (keys[68]) {
-    player.x = player.x + 10;
+    player.x = player.x + 3;
   }
+  player.velX *= friction;
+  player.velY += gravity;
+  player.x += player.velX;
+  player.y += player.velY;
+
+  if (player.x >= width-player.width) {
+      player.x = width-player.width;
+     } else if (player.x <= 0) {
+      player.x = 0;
+    }
+
+  if(player.y >= height-player.height){
+      player.y = height - player.height;
+      player.jumping = false;
+    }
+
 
 
   // Clear the context
@@ -67,7 +93,18 @@ function processUserInput() {
 
 }
 
+function drawObstacles() {
 
+  var min = 105;
+  var max = 560;
+
+  var randomX = Math.floor(Math.random() * (max - min)) + min;
+
+
+  context.fillStyle = "red";
+  context.fillRect(randomX, height - 30, 30,30);
+
+}
 
 document.body.addEventListener("keydown", function(e) {
     keys[e.keyCode] = true;
@@ -79,5 +116,5 @@ document.body.addEventListener("keyup", function(e) {
 
 window.addEventListener("load",function(){
     processUserInput();
-
+    drawObstacles();
 });
