@@ -4,6 +4,15 @@
     window.requestAnimationFrame = requestAnimationFrame;
 })();
 
+// Generate a number between 105 and 560.
+// why? in the documentation.
+
+
+
+// Math.floor(Math.random() * (max value - min value)) + min value;
+var randomXPos = Math.floor(Math.random() * (560 - 105)) + 105;
+var randomSizeY = Math.floor(Math.random() * (60 - 20)) + 20;
+var randomYPos = Math.floor(Math.random() * (560 - 105)) + 105;
 // Setup of the game
 var img = new Image(); //creating the instance of the image
 img.src = "img/kangaroo.jpg";
@@ -27,7 +36,7 @@ var canvas = document.getElementById("main"),
     player = {
   // this is where the player will start
       x : 30,
-      y : height - 20,
+      y : height - 30,
       height : 45,
       width : 30,
       speed : 2,
@@ -35,6 +44,14 @@ var canvas = document.getElementById("main"),
       velY : 0,
       jumping : false
     },
+
+    enemy = {
+      x : randomXPos,
+      y : height - randomSizeY,
+      height : 45,
+      width : 30
+    },
+
 
     keys = [],
     friction = 0.1,
@@ -70,6 +87,8 @@ function processUserInput() {
   player.x += player.velX;
   player.y += player.velY;
 
+  // Creating a border for the player not to
+  // escape
   if (player.x >= width-player.width) {
       player.x = width-player.width;
      } else if (player.x <= 0) {
@@ -83,26 +102,29 @@ function processUserInput() {
 
 
 
+
+
   // Clear the context
   context.clearRect(0,0,width,height);
   // drawing the character
   context.drawImage(img, player.x, player.y);
+  context.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
 
+
+
+  if (
+		player.x <= (enemy.x + 32)
+		&& enemy.x <= (player.x + 32)
+		&& player.y <= (enemy.y + 32)
+		&& enemy.y <= (player.y + 32)
+	){
+    alert("you failed");
+
+  }
 
   requestAnimationFrame(processUserInput);
 
-}
 
-function drawObstacles() {
-
-  var min = 105;
-  var max = 560;
-
-  var randomX = Math.floor(Math.random() * (max - min)) + min;
-
-
-  context.fillStyle = "red";
-  context.fillRect(randomX, height - 30, 30,30);
 
 }
 
