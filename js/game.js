@@ -13,9 +13,9 @@
 var randomXPos = Math.floor(Math.random() * (560 - 105)) + 105;
 var randomSizeY = Math.floor(Math.random() * (60 - 20)) + 20;
 var randomYPos = Math.floor(Math.random() * (560 - 105)) + 105;
+var lives = 5;
 // Setup of the game
-var img = new Image(); //creating the instance of the image
-img.src = "img/kangaroo.jpg";
+
 
 
 
@@ -61,24 +61,41 @@ canvas.width = width;
 canvas.height = height;
 
 
+  var kang = new Image();
+  kang.src = "img/kangaroo.jpg";
+
+  var bg = new Image();
+  bg.src = "img/background.png";
+
+
+  // Add Image for Obstacle.
+  var obstacle1 = new Image();
+  obstacle1.src = "img/obstacle1.jpg";
+
+  var obstacle2 = new Image();
+  obstacle2.src = "img/obstacle2.jpg";
+
+
+
+
 function processUserInput() {
 
-  // W
-  if (keys[87]) {
+  // W  || spacebar (Jump)
+  if (keys[87] || keys[32]) {
     if(!player.jumping){
       player.jumping = true;
       player.velY = -player.speed*2;
     }
   }
-  // S
+  // S DOWN
   if (keys[83]){
     player.y = player.y + 3;
   }
-  // A
+  // A LEFT
   if (keys[65]) {
     player.x = player.x - 3;
   }
-  // D
+  // D RIGHT
   if (keys[68]) {
     player.x = player.x + 3;
   }
@@ -101,15 +118,12 @@ function processUserInput() {
     }
 
 
-
-
-
   // Clear the context
   context.clearRect(0,0,width,height);
   // drawing the character
-  context.drawImage(img, player.x, player.y);
+  context.drawImage(kang, player.x, player.y);
+  // Drawing the enemy
   context.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
-
 
 
   if (
@@ -118,13 +132,13 @@ function processUserInput() {
 		&& player.y <= (enemy.y + 32)
 		&& enemy.y <= (player.y + 32)
 	){
-    alert("you failed");
+    lives--;
+    alert("You have: " + lives + " left");
+    reset();
 
   }
 
   requestAnimationFrame(processUserInput);
-
-
 
 }
 
@@ -140,3 +154,19 @@ window.addEventListener("load",function(){
     processUserInput();
     drawObstacles();
 });
+
+var reset = function() {
+
+
+  // Kind of works
+
+  // Sets the player to starting point
+  player.x = 30;
+  player.y = height - 30;
+
+
+  // TODO: Randomly move the enemy.
+
+
+
+}
