@@ -133,14 +133,51 @@ function processUserInput() {
 		&& enemy.y <= (player.y + 32)
 	){
     lives--;
-    alert("You have: " + lives + " left");
+
+
+    if (lives < 1){
+      game_over();
+      // alert("Game Over");
+
+    } else {
     reset();
+    }
 
   }
-
+  score();
   requestAnimationFrame(processUserInput);
 
 }
+
+var score = function() {
+
+  var cScore = document.getElementById("score"),
+  // Give the canvas 2D context
+      ctxScore = canvas.getContext("2d");
+
+  ctxScore.font = "20px Arial";
+  ctxScore.fillText("Lives left: " + lives, 10, 20);
+
+
+}
+
+
+
+var game_over = function() {
+
+  lives == 5;
+  var cGame_Over = document.getElementById("game_over"),
+  // Give the canvas 2D context
+      cxtGame_Over = canvas.getContext("2d");
+
+  cxtGame_Over.font = "50px Arial";
+  cxtGame_Over.fillText("Game Over", 155, 120);
+  reset();
+
+
+
+}
+
 
 document.body.addEventListener("keydown", function(e) {
     keys[e.keyCode] = true;
