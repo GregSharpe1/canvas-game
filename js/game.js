@@ -33,18 +33,26 @@ var canvas = document.getElementById("main"),
     player = {
   // this is where the player will start
       x : 30,
-      y : height - 45,
+      y : height - 50,
       height : 45,
       width : 30,
-      speed : 2,
+      speed : 3,
       velX : 0,
       velY : 0,
       jumping : false,
-      grounded : false,
+      grounded : false
     },
 
 
 // level 1!!!
+  fBlock = {
+    x : 0,
+    y : height - 5,
+    width : 600,
+    height : 5,
+  }
+
+
 
     block = {
       x : 150,
@@ -100,9 +108,9 @@ var canvas = document.getElementById("main"),
     // Array to hold the keys
     keys = [],
     // friction of the player
-    friction = 0.1,
+    friction = 0.8,
     // gravity of the player
-    gravity = 0.1;
+    gravity = 0.2;
 
 canvas.width = width;
 canvas.height = height;
@@ -141,6 +149,7 @@ canvas.height = height;
 // this function will process keypresses
 function processUserInput() {
 
+
   // W  || spacebar (Jump)
   if (keys[87] || keys[32]) {
     if(!player.jumping && player.grounded){
@@ -153,20 +162,20 @@ function processUserInput() {
   // A LEFT
   if (keys[65] || keys[37]) {
     kang_jump.src = "img/kangaroo-jump-inverted.png";
-    player.x = player.x - 3;
+    if (player.velX < player.speed){
+      player.velX--;
+    }
   }
   // D RIGHT
   if (keys[68] || keys[39]) {
     kang_jump.src = "img/kangaroo-jump.png";
-    player.x = player.x + 3;
+    if (player.velX < player.speed){
+      player.velX++;
+    }
   }
 
   player.velX *= friction;
   player.velY += gravity;
-
-
-
-
 
 
 
@@ -183,18 +192,25 @@ function processUserInput() {
       player.jumping = false;
     }
 
+    player.grounded = false;
 
 
   // Clear the context
   context.clearRect(0,0,width,height);
+
   // drawing the character
+var dir1 = colCheck(player, fBlock);
+if (dir1 === "l" || dir1 === "r") {
+    player.velX = 0;
+    player.jumping = false;
+} else if (dir1 === "b") {
+    player.grounded = true;
+    player.jumping = false;
+} else if (dir1 === "t") {
+    player.velY *= -1;
+}
 
-  player.grounded = false;
-
-
-
-
-
+  context.fillRect(fBlock.x, fBlock.y, fBlock.width, fBlock.y);
 
   context.fillRect(block.x, block.y, block.width, block.height);
   context.fillRect(block1.x, block1.y, block1.width, block1.height);
@@ -215,10 +231,13 @@ function processUserInput() {
       player.velY *= -1;
   }
 
-  
   if(player.grounded){
        player.velY = 0;
   }
+
+  player.x += player.velX;
+  player.y += player.velY;
+
 
 
 
