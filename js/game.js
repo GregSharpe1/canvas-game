@@ -12,7 +12,7 @@
 var randomXPos = Math.floor(Math.random() * (560 - 105)) + 105;
 var randomSizeY = Math.floor(Math.random() * (60 - 20)) + 20;
 var randomYPos = Math.floor(Math.random() * (560 - 105)) + 105;
-var levelNum = 1;
+var levelNum = 2;
 
 // Setup of the game
 
@@ -24,7 +24,7 @@ var canvas = document.getElementById("main"),
 // Set the canvas with boundaries
 // to allow the user not to go outside
 // the boundaries
-    height = 360,
+    height = 400,
     width = 600,
 
 
@@ -44,66 +44,16 @@ var canvas = document.getElementById("main"),
     },
 
 
-// level 1!!!
-  fBlock = {
-    x : 0,
-    y : height - 5,
-    width : 600,
-    height : 5,
-  }
 
 
 
-    block = {
-      x : 150,
-      y : 290,
-      width : 70,
-      height : 10
-    },
-
-    block1 = {
-      x : 300,
-      y : 230,
-      width : 70,
-      height : 10
-    }
-
-    block2 = {
-      x : 430,
-      y : 180,
-      width : 70,
-      height : 10
-    }
-
-    block3 = {
-      x : 350,
-      y : 120,
-      width : 70,
-      height : 10
-    }
-
-    block4 = {
-      x : 180,
-      y : 140,
-      width : 70,
-      height : 10
-    }
-
-    block5 = {
+    door = {
+      // this is where the 'door' (obstacles) will be placed.
       x : 50,
-      y : 100,
-      width : 40,
-      height : 10
-    }
-
-
-    // door = {
-    //   // this is where the 'door' (obstacles) will be placed.
-    //   x : randomXPos,
-    //   y : height - randomSizeY,
-    //   height : 45,
-    //   width : 30
-    // },
+      y : 50,
+      height : 45,
+      width : 30
+    },
 
     // Array to hold the keys
     keys = [],
@@ -177,8 +127,6 @@ function processUserInput() {
   player.velX *= friction;
   player.velY += gravity;
 
-
-
   // Creating a border for the player not to
   // escape
   if (player.x >= width-player.width) {
@@ -212,14 +160,16 @@ if (dir1 === "l" || dir1 === "r") {
 
   context.fillRect(fBlock.x, fBlock.y, fBlock.width, fBlock.y);
 
-  context.fillRect(block.x, block.y, block.width, block.height);
-  context.fillRect(block1.x, block1.y, block1.width, block1.height);
-  context.fillRect(block2.x, block2.y, block2.width, block2.height);
-  context.fillRect(block3.x, block3.y, block3.width, block3.height);
-  context.fillRect(block4.x, block4.y, block4.width, block4.height);
-  context.fillRect(block5.x, block5.y, block5.width, block5.height);
 
-  var dir = colCheck(player, block);
+if (levelNum == 1){
+
+
+for (var i=0; i < 7; i++) {
+
+  context.fillRect(block[i].x, block[i].y, block[i].width, block[i].height);
+
+
+  var dir = colCheck(player, block[i]);
 
   if (dir === "l" || dir === "r") {
       player.velX = 0;
@@ -230,7 +180,52 @@ if (dir1 === "l" || dir1 === "r") {
   } else if (dir === "t") {
       player.velY *= -1;
   }
+}
 
+} else if (levelNum == 2){
+
+  for (var i=0; i < 7; i++) {
+
+    context.fillRect(block1[i].x, block1[i].y, block1[i].width, block1[i].height);
+
+
+    var dir = colCheck(player, block1[i]);
+
+    if (dir === "l" || dir === "r") {
+        player.velX = 0;
+        player.jumping = false;
+    } else if (dir === "b") {
+        player.grounded = true;
+        player.jumping = false;
+    } else if (dir === "t") {
+        player.velY *= -1;
+    }
+  }
+
+
+}else if (levelNum == 3){
+
+  for (var i=0; i < 7; i++) {
+
+    context.fillRect(block2[i].x, block2[i].y, block2[i].width, block2[i].height);
+
+
+    var dir = colCheck(player, block2[i]);
+
+    if (dir === "l" || dir === "r") {
+        player.velX = 0;
+        player.jumping = false;
+    } else if (dir === "b") {
+        player.grounded = true;
+        player.jumping = false;
+    } else if (dir === "t") {
+        player.velY *= -1;
+    }
+  }
+
+
+}
+// make sure that the player is grounded
   if(player.grounded){
        player.velY = 0;
   }
@@ -238,39 +233,31 @@ if (dir1 === "l" || dir1 === "r") {
   player.x += player.velX;
   player.y += player.velY;
 
-
-
-
-
-  // Drawing the door
+  // Drawing the player
   context.drawImage(kang_jump, player.x, player.y);
+  // drawing the door
+  context.drawImage(obstacle1, door.x, door.y);
+
+  if (
+ 		player.x <= (door.x + 32)
+ 		&& door.x <= (player.x + 32)
+ 		&& player.y <= (door.y + 32)
+ 		&& door.y <= (player.y + 32)
+ 	){
+      levelNum++;
+      alert("next leve");
+      reset();
+}
+
+
 
   window.requestAnimationFrame(processUserInput);
 
+
+
+
 }
 
-// this function will place the remaining lives on the canvas
-// and the score
-
-// this function will run when lives are below 0
-// it will add a game over layer to the canvas and
-// reset the game
-
-
-
-// var game_over = function() {
-//
-//
-//   var cGame_Over = document.getElementById("game_over"),
-//   // Give the canvas 2D context
-//       cxtGame_Over = canvas.getContext("2d");
-//
-//       // add text to the canvas saying "game over"
-//   cxtGame_Over.font = "50px Arial";
-//   cxtGame_Over.fillText("Game Over", 155, 120);
-//
-//
-// }
 
 // lsiten for key presses down
 document.body.addEventListener("keydown", function(e) {
@@ -322,14 +309,167 @@ function colCheck(shapeA, shapeB) {
 // this function will reset the player to the start position
 var reset = function() {
 
-  // decrease the lives by one every time the game is reset
-  lives--;
-  // Kind of works
-
   // Sets the player to starting point
   player.x = 30;
-  player.y = height - 30;
+  player.y = height - 45;
+
+  // make sure the player's facing the right way
+  kang_jump.src = "img/kangaroo-jump.png";
 
   // TODO: Randomly move the door.
 
 }
+
+// This block is used to create the floor on which
+// the player starts on
+  fBlock = {
+    x : 0,
+    y : height - 5,
+    width : 600,
+    height : 5,
+  }
+
+// Level 1
+
+var block = [];
+
+// Here i'm creating the first level blocks
+// block 1
+block.push({
+  x : 100,
+  y : 340,
+  width : 20,
+  height : 10
+});
+
+block.push({
+  x : 150,
+  y : 290,
+  width : 70,
+  height : 10
+});
+// block 2
+block.push({
+  x : 300,
+  y : 230,
+  width : 20,
+  height : 10
+});
+// block 3
+block.push({
+  x : 420,
+  y : 180,
+  width : 70,
+  height : 10
+});
+// block 4
+block.push({
+  x : 320,
+  y : 100,
+  width : 70,
+  height : 10
+});
+// block 5
+block.push({
+  x : 180,
+  y : 140,
+  width : 70,
+  height : 10
+});
+// block 6
+block.push({
+  x : 50,
+  y : 100,
+  width : 40,
+  height : 10
+});
+
+var block1 = [];
+
+// Here I'm creating the second level
+block1.push({
+  x : 150,
+  y : 290,
+  width : 70,
+  height : 10
+});
+
+block1.push({
+  x : 300,
+  y : 230,
+  width : 70,
+  height : 10
+});
+
+block1.push({
+  x : 430,
+  y : 180,
+  width : 70,
+  height : 10
+});
+
+block1.push({
+  x : 350,
+  y : 120,
+  width : 70,
+  height : 10
+});
+
+block1.push({
+  x : 180,
+  y : 140,
+  width : 70,
+  height : 10
+});
+
+block1.push({
+  x : 50,
+  y : 100,
+  width : 40,
+  height : 10
+});
+
+var block2 = [];
+
+// Here I'm creating the second level
+block2.push({
+  x : 150,
+  y : 290,
+  width : 70,
+  height : 10
+});
+
+block2.push({
+  x : 300,
+  y : 230,
+  width : 70,
+  height : 10
+});
+
+block2.push({
+  x : 430,
+  y : 180,
+  width : 70,
+  height : 10
+});
+
+block2.push({
+  x : 350,
+  y : 120,
+  width : 70,
+  height : 10
+});
+
+block2.push({
+  x : 180,
+  y : 140,
+  width : 70,
+  height : 10
+});
+
+block2.push({
+  x : 50,
+  y : 100,
+  width : 40,
+  height : 10
+});
