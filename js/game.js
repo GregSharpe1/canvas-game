@@ -4,6 +4,7 @@
     window.requestAnimationFrame = requestAnimationFrame;
 })();
 
+
 // Generate a number between 105 and 560.
 // why? in the documentation.
 
@@ -11,7 +12,7 @@
 var randomXPos = Math.floor(Math.random() * (560 - 105)) + 105;
 var randomSizeY = Math.floor(Math.random() * (60 - 20)) + 20;
 var randomYPos = Math.floor(Math.random() * (560 - 105)) + 105;
-var lives = 5;
+var levelNum = 1;
 
 // Setup of the game
 
@@ -32,22 +33,69 @@ var canvas = document.getElementById("main"),
     player = {
   // this is where the player will start
       x : 30,
-      y : height - 30,
+      y : height - 45,
       height : 45,
       width : 30,
       speed : 2,
       velX : 0,
       velY : 0,
-      jumping : false
+      jumping : false,
+      grounded : false,
     },
 
-    enemy = {
-      // this is where the 'enemy' (obstacles) will be placed.
-      x : randomXPos,
-      y : height - randomSizeY,
-      height : 45,
-      width : 30
+
+// level 1!!!
+
+    block = {
+      x : 150,
+      y : 290,
+      width : 70,
+      height : 10
     },
+
+    block1 = {
+      x : 300,
+      y : 230,
+      width : 70,
+      height : 10
+    }
+
+    block2 = {
+      x : 430,
+      y : 180,
+      width : 70,
+      height : 10
+    }
+
+    block3 = {
+      x : 350,
+      y : 120,
+      width : 70,
+      height : 10
+    }
+
+    block4 = {
+      x : 180,
+      y : 140,
+      width : 70,
+      height : 10
+    }
+
+    block5 = {
+      x : 50,
+      y : 100,
+      width : 40,
+      height : 10
+    }
+
+
+    // door = {
+    //   // this is where the 'door' (obstacles) will be placed.
+    //   x : randomXPos,
+    //   y : height - randomSizeY,
+    //   height : 45,
+    //   width : 30
+    // },
 
     // Array to hold the keys
     keys = [],
@@ -93,35 +141,34 @@ canvas.height = height;
 // this function will process keypresses
 function processUserInput() {
 
-  var invert = false;
-  kang_jump.src = "img/kangaroo-jump.png";
   // W  || spacebar (Jump)
   if (keys[87] || keys[32]) {
-    if(!player.jumping){
+    if(!player.jumping && player.grounded){
       player.jumping = true;
+      player.grounded = false;
       player.velY = -player.speed*2;
     }
   }
-  // S DOWN
-  if (keys[83]){s
-    player.y = player.y + 3;
-  }
+
   // A LEFT
-  if (keys[65]) {
-    invert = true;
+  if (keys[65] || keys[37]) {
+    kang_jump.src = "img/kangaroo-jump-inverted.png";
     player.x = player.x - 3;
   }
   // D RIGHT
-  if (keys[68]) {
-    invert = false;
+  if (keys[68] || keys[39]) {
+    kang_jump.src = "img/kangaroo-jump.png";
     player.x = player.x + 3;
   }
 
-
   player.velX *= friction;
   player.velY += gravity;
-  player.x += player.velX;
-  player.y += player.velY;
+
+
+
+
+
+
 
   // Creating a border for the player not to
   // escape
@@ -136,79 +183,75 @@ function processUserInput() {
       player.jumping = false;
     }
 
-    if (invert == true){
-      kang_jump.src = "img/kangaroo-jump-inverted.png";
-    }
 
 
   // Clear the context
   context.clearRect(0,0,width,height);
   // drawing the character
-  context.drawImage(kang_jump, player.x, player.y);
-  // Drawing the enemy
-  context.drawImage(obstacle1, enemy.x, enemy.y, 40,40);
 
-  // if statement to check if it's making contact with the obstacles
-  if (
-		player.x <= (enemy.x + 32)
-		&& enemy.x <= (player.x + 32)
-		&& player.y <= (enemy.y + 32)
-		&& enemy.y <= (player.y + 32)
-	){
-    // if the lives fall under 1 (aka zero lives)
-    // run game over function
-    if (lives < 1){
+  player.grounded = false;
 
-      game_over();
-      // alert("Game Over");
 
-    }
-    // if hit an obstacle then run reset function
-    else {
 
-    reset();
-    }
 
+
+
+  context.fillRect(block.x, block.y, block.width, block.height);
+  context.fillRect(block1.x, block1.y, block1.width, block1.height);
+  context.fillRect(block2.x, block2.y, block2.width, block2.height);
+  context.fillRect(block3.x, block3.y, block3.width, block3.height);
+  context.fillRect(block4.x, block4.y, block4.width, block4.height);
+  context.fillRect(block5.x, block5.y, block5.width, block5.height);
+
+  var dir = colCheck(player, block);
+
+  if (dir === "l" || dir === "r") {
+      player.velX = 0;
+      player.jumping = false;
+  } else if (dir === "b") {
+      player.grounded = true;
+      player.jumping = false;
+  } else if (dir === "t") {
+      player.velY *= -1;
   }
-  // place the score on the canvas
-  score();
-  // request frame
-  requestAnimationFrame(processUserInput);
+
+  
+  if(player.grounded){
+       player.velY = 0;
+  }
+
+
+
+
+  // Drawing the door
+  context.drawImage(kang_jump, player.x, player.y);
+
+  window.requestAnimationFrame(processUserInput);
 
 }
 
 // this function will place the remaining lives on the canvas
 // and the score
-var score = function() {
-
-  var cScore = document.getElementById("score"),
-  // Give the canvas 2D context
-      ctxScore = canvas.getContext("2d");
-
-      // add the remaining lives to the canvas
-  ctxScore.font = "20px Arial";
-  ctxScore.fillText("Lives left: " + lives, 10, 20);
-
-
-}
 
 // this function will run when lives are below 0
 // it will add a game over layer to the canvas and
 // reset the game
 
-var game_over = function() {
 
 
-  var cGame_Over = document.getElementById("game_over"),
-  // Give the canvas 2D context
-      cxtGame_Over = canvas.getContext("2d");
-
-      // add text to the canvas saying "game over"
-  cxtGame_Over.font = "50px Arial";
-  cxtGame_Over.fillText("Game Over", 155, 120);
-
-
-}
+// var game_over = function() {
+//
+//
+//   var cGame_Over = document.getElementById("game_over"),
+//   // Give the canvas 2D context
+//       cxtGame_Over = canvas.getContext("2d");
+//
+//       // add text to the canvas saying "game over"
+//   cxtGame_Over.font = "50px Arial";
+//   cxtGame_Over.fillText("Game Over", 155, 120);
+//
+//
+// }
 
 // lsiten for key presses down
 document.body.addEventListener("keydown", function(e) {
@@ -223,12 +266,40 @@ window.addEventListener("load",function(){
     processUserInput();
 });
 
-// do i need this function?
-// this function will end the game and display the score
-var end_game = function() {
+function colCheck(shapeA, shapeB) {
 
+    var vX = (shapeA.x + (shapeA.width / 2)) - (shapeB.x + (shapeB.width / 2)),
+        vY = (shapeA.y + (shapeA.height / 2)) - (shapeB.y + (shapeB.height / 2)),
+
+        hWidths = (shapeA.width / 2) + (shapeB.width / 2),
+        hHeights = (shapeA.height / 2) + (shapeB.height / 2),
+        colDir = null;
+
+
+    if (Math.abs(vX) < hWidths && Math.abs(vY) < hHeights) {
+
+        var oX = hWidths - Math.abs(vX),
+            oY = hHeights - Math.abs(vY);
+        if (oX >= oY) {
+            if (vY > 0) {
+                colDir = "t";
+                shapeA.y += oY;
+            } else {
+                colDir = "b";
+                shapeA.y -= oY;
+            }
+        } else {
+            if (vX > 0) {
+                colDir = "l";
+                shapeA.x += oX;
+            } else {
+                colDir = "r";
+                shapeA.x -= oX;
+            }
+        }
+    }
+    return colDir;
 }
-
 // this function will reset the player to the start position
 var reset = function() {
 
@@ -240,6 +311,6 @@ var reset = function() {
   player.x = 30;
   player.y = height - 30;
 
-  // TODO: Randomly move the enemy.
+  // TODO: Randomly move the door.
 
 }
