@@ -12,7 +12,7 @@
 var randomXPos = Math.floor(Math.random() * (560 - 105)) + 105;
 var randomSizeY = Math.floor(Math.random() * (60 - 20)) + 20;
 var randomYPos = Math.floor(Math.random() * (560 - 105)) + 105;
-var levelNum = 2;
+var levelNum = 1;
 
 // Setup of the game
 
@@ -32,7 +32,7 @@ var canvas = document.getElementById("main"),
   // this is where the player will start
       x : 30,
       y : height - 50,
-      height : 45,
+      height : 50,
       width : 30,
       speed : 3,
       velX : 0,
@@ -64,10 +64,10 @@ canvas.height = height;
 
 // player jumping image
   var kang_jump = new Image();
-  kang_jump.src = "img/kangaroo-jump.png";
+  kang_jump.src = "img/player.png";
 // player jumping image inverted
   var kang_jump_inverted = new Image();
-  kang_jump_inverted.src = "img/kangaroo-jump-inverted.png";
+  kang_jump_inverted.src = "img/player-inverted.png";
 // player running images
   var kang_running = new Image();
   kang_running.src = "img/kangaroo-running.gif";
@@ -101,19 +101,20 @@ function processUserInput() {
       player.jumping = true;
       player.grounded = false;
       player.velY = -player.speed*2;
+
     }
   }
 
   // A LEFT
   if (keys[65] || keys[37]) {
-    kang_jump.src = "img/kangaroo-jump-inverted.png";
+    kang_jump.src = "img/player-inverted.png";
     if (player.velX < player.speed){
       player.velX--;
     }
   }
   // D RIGHT
   if (keys[68] || keys[39]) {
-    kang_jump.src = "img/kangaroo-jump.png";
+    kang_jump.src = "img/player.png";
     if (player.velX < player.speed){
       player.velX++;
     }
@@ -156,7 +157,6 @@ if (dir1 === "l" || dir1 === "r") {
 
 
 
-
 if (levelNum == 1){
 
     context.fillRect(fBlock.x, fBlock.y, fBlock.width, fBlock.y);
@@ -185,9 +185,10 @@ for (var i=0; i < block.length; i++) {
 }
  else if (levelNum == 2){
 
+
      context.fillRect(fBlock.x, fBlock.y, fBlock.width, fBlock.y);
 
-  for (var i=0; i < 7; i++) {
+  for (var i=0; i < block1.length; i++) {
 
     context.fillRect(block1[i].x, block1[i].y, block1[i].width, block1[i].height);
 
@@ -211,7 +212,7 @@ else if (levelNum == 3){
 
     context.fillRect(fBlock.x, fBlock.y, fBlock.width, fBlock.y);
 
-  for (var i=0; i < 7; i++) {
+  for (var i=0; i < block2.length; i++) {
 
     context.fillRect(block2[i].x, block2[i].y, block2[i].width, block2[i].height);
 
@@ -236,8 +237,7 @@ else if (levelNum == 3){
        player.velY = 0;
   }
 
-  player.x += player.velX;
-  player.y += player.velY;
+
 
   // Drawing the player
   context.drawImage(kang_jump, player.x, player.y);
@@ -252,12 +252,17 @@ else if (levelNum == 3){
    	){
 
         context.clearRect(0,0,width,height);
+        reset();
         levelNum++;
-        alert("next level");
+        alert("next level" + levelNum);
+
 
   }
 
 
+
+  player.x += player.velX;
+  player.y += player.velY;
 
   // refresh the page
   window.requestAnimationFrame(processUserInput);
@@ -312,15 +317,27 @@ function colCheck(shapeA, shapeB) {
     }
     return colDir;
 }
+
+var debug = function(){
+  for (var i = 0; i < 2; i ++){
+  alert(player.speed);
+  alert(player.velX);
+  alert(player.velY);
+}
+
+}
+
+
 // this function will reset the player to the start position
 var reset = function() {
 
   // Sets the player to starting point
   player.x = 30;
-  player.y = height - 45;
+  player.y = height - 50;
+
 
   // make sure the player's facing the right way
-  kang_jump.src = "img/kangaroo-jump.png";
+  kang_jump.src = "img/player.png";
 
   processUserInput();
 
@@ -442,3 +459,189 @@ block1.push({
   width : 20,
   height : 10
 });
+
+block1.push({
+  x : 20,
+  y : canvas.height - 120,
+  width : 50,
+  height : 10
+});
+
+block1.push({
+  x : 200,
+  y : canvas.height - 150,
+  width : 70,
+  height : 10
+});
+
+block1.push({
+  x : 340,
+  y : canvas.height - 100,
+  width : 40,
+  height : 10
+});
+
+block1.push({
+  x : 470,
+  y : canvas.height - 110,
+  width : 60,
+  height : 10
+});
+
+block1.push({
+  x : 650,
+  y : canvas.height - 150,
+  width : 20,
+  height : 10
+});
+
+block1.push({
+  x : 740,
+  y : canvas.height - 200,
+  width : 20,
+  height : 10
+});
+
+block1.push({
+  x : 775,
+  y : canvas.height - 260,
+  width : 25,
+  height : 10
+});
+
+block1.push({
+  x : 700,
+  y : canvas.height - 330,
+  width : 60,
+  height : 10
+});
+
+block1.push({
+  x : 550,
+  y : canvas.height - 300,
+  width : 60,
+  height : 10
+});
+
+block1.push({
+  x : 400,
+  y : canvas.height - 380,
+  width : 80,
+  height : 10
+});
+
+block1.push({
+  x : 300,
+  y : canvas.height - 300,
+  width : 30,
+  height : 10
+});
+
+block1.push({
+  x : 170,
+  y : canvas.height - 280,
+  width : 40,
+  height : 10
+});
+
+block1.push({
+  x : 10,
+  y : canvas.height - 350,
+  width : 90,
+  height : 10
+});
+
+// door position for this level
+// x : 30
+// y : canvas.height - 300
+
+var block2 = [];
+
+// starting position for the player is changing!!!
+
+block2.push({
+  x : 0,
+  y : canvas.height - 420,
+  width : 60,
+  height : 10
+});
+
+block2.push({
+  x : 140,
+  y : canvas.height - 350,
+  width : 40,
+  height : 10
+});
+
+block2.push({
+  x : 270,
+  y : canvas.height - 370,
+  width : 40,
+  height : 10
+});
+
+block2.push({
+  x : 420,
+  y : canvas.height - 270,
+  width : 30,
+  height : 10
+});
+
+block2.push({
+  x : 560,
+  y : canvas.height - 180,
+  width : 40,
+  height : 10
+});
+
+block2.push({
+  x : 660,
+  y : canvas.height - 220,
+  width : 50,
+  height : 10
+});
+
+block2.push({
+  x : 760,
+  y : canvas.height - 280,
+  width : 40,
+  height : 10
+});
+
+block2.push({
+  x : 600,
+  y : canvas.height - 350,
+  width : 80,
+  height : 10
+});
+
+block2.push({
+  x : 470,
+  y : canvas.height - 400,
+  width : 30,
+  height : 10
+});
+
+block2.push({
+  x : 660,
+  y : canvas.height - 220,
+  width : 50,
+  height : 10
+});
+
+block2.push({
+  x : 600,
+  y : canvas.height - 450,
+  width : 50,
+  height : 10
+});
+
+// final block
+block2.push({
+  x : 730,
+  y : canvas.height - 500,
+  width : 50,
+  height : 10
+});
+
+// door position
