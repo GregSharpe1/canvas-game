@@ -24,10 +24,8 @@ var canvas = document.getElementById("main"),
 // Set the canvas with boundaries
 // to allow the user not to go outside
 // the boundaries
-    height = 400,
-    width = 600,
-
-
+    height = 600,
+    width = 800,
 
 // Create the player giving some config
     player = {
@@ -42,9 +40,6 @@ var canvas = document.getElementById("main"),
       jumping : false,
       grounded : false
     },
-
-
-
 
 
     door = {
@@ -127,6 +122,7 @@ function processUserInput() {
   player.velX *= friction;
   player.velY += gravity;
 
+
   // Creating a border for the player not to
   // escape
   if (player.x >= width-player.width) {
@@ -158,13 +154,15 @@ if (dir1 === "l" || dir1 === "r") {
     player.velY *= -1;
 }
 
-  context.fillRect(fBlock.x, fBlock.y, fBlock.width, fBlock.y);
+
 
 
 if (levelNum == 1){
 
+    context.fillRect(fBlock.x, fBlock.y, fBlock.width, fBlock.y);
 
-for (var i=0; i < 7; i++) {
+for (var i=0; i < block.length; i++) {
+
 
   context.fillRect(block[i].x, block[i].y, block[i].width, block[i].height);
 
@@ -180,45 +178,53 @@ for (var i=0; i < 7; i++) {
   } else if (dir === "t") {
       player.velY *= -1;
   }
+
 }
 
-} else if (levelNum == 2){
+
+}
+ else if (levelNum == 2){
+
+     context.fillRect(fBlock.x, fBlock.y, fBlock.width, fBlock.y);
 
   for (var i=0; i < 7; i++) {
 
     context.fillRect(block1[i].x, block1[i].y, block1[i].width, block1[i].height);
 
 
-    var dir = colCheck(player, block1[i]);
+    var dir2 = colCheck(player, block1[i]);
 
-    if (dir === "l" || dir === "r") {
+    if (dir2 === "l" || dir2 === "r") {
         player.velX = 0;
         player.jumping = false;
-    } else if (dir === "b") {
+    } else if (dir2 === "b") {
         player.grounded = true;
         player.jumping = false;
-    } else if (dir === "t") {
+    } else if (dir2 === "t") {
         player.velY *= -1;
     }
   }
 
 
-}else if (levelNum == 3){
+}
+else if (levelNum == 3){
+
+    context.fillRect(fBlock.x, fBlock.y, fBlock.width, fBlock.y);
 
   for (var i=0; i < 7; i++) {
 
     context.fillRect(block2[i].x, block2[i].y, block2[i].width, block2[i].height);
 
 
-    var dir = colCheck(player, block2[i]);
+    var dir3 = colCheck(player, block2[i]);
 
-    if (dir === "l" || dir === "r") {
+    if (dir3 === "l" || dir3 === "r") {
         player.velX = 0;
         player.jumping = false;
-    } else if (dir === "b") {
+    } else if (dir3 === "b") {
         player.grounded = true;
         player.jumping = false;
-    } else if (dir === "t") {
+    } else if (dir3 === "t") {
         player.velY *= -1;
     }
   }
@@ -235,26 +241,26 @@ for (var i=0; i < 7; i++) {
 
   // Drawing the player
   context.drawImage(kang_jump, player.x, player.y);
-  // drawing the door
+
   context.drawImage(obstacle1, door.x, door.y);
 
   if (
- 		player.x <= (door.x + 32)
- 		&& door.x <= (player.x + 32)
- 		&& player.y <= (door.y + 32)
- 		&& door.y <= (player.y + 32)
- 	){
-      levelNum++;
-      alert("next leve");
-      reset();
-}
+  		player.x <= (door.x + 32)
+   		&& door.x <= (player.x + 32)
+   		&& player.y <= (door.y + 32)
+   		&& door.y <= (player.y + 32)
+   	){
+
+        context.clearRect(0,0,width,height);
+        levelNum++;
+        alert("next level");
+
+  }
 
 
 
+  // refresh the page
   window.requestAnimationFrame(processUserInput);
-
-
-
 
 }
 
@@ -316,6 +322,8 @@ var reset = function() {
   // make sure the player's facing the right way
   kang_jump.src = "img/kangaroo-jump.png";
 
+  processUserInput();
+
   // TODO: Randomly move the door.
 
 }
@@ -325,8 +333,8 @@ var reset = function() {
   fBlock = {
     x : 0,
     y : height - 5,
-    width : 600,
-    height : 5,
+    width : canvas.width,
+    height : canvas.height,
   }
 
 // Level 1
@@ -337,139 +345,100 @@ var block = [];
 // block 1
 block.push({
   x : 100,
-  y : 340,
+  y : canvas.height - 60,
   width : 20,
   height : 10
 });
 
 block.push({
-  x : 150,
-  y : 290,
+  x : 170,
+  y : canvas.height - 130,
   width : 70,
   height : 10
 });
-// block 2
+
 block.push({
   x : 300,
-  y : 230,
-  width : 20,
-  height : 10
-});
-// block 3
-block.push({
-  x : 420,
-  y : 180,
+  y : canvas.height - 150,
   width : 70,
-  height : 10
-});
-// block 4
-block.push({
-  x : 320,
-  y : 100,
-  width : 70,
-  height : 10
-});
-// block 5
-block.push({
-  x : 180,
-  y : 140,
-  width : 70,
-  height : 10
-});
-// block 6
-block.push({
-  x : 50,
-  y : 100,
-  width : 40,
   height : 10
 });
 
+block.push({
+  x : 430,
+  y : canvas.height - 230,
+  width : 80,
+  height : 10
+});
+
+block.push({
+  x : 500,
+  y : canvas.height - 280,
+  width : 20,
+  height : 10
+});
+
+block.push({
+  x : 640,
+  y : canvas.height - 340,
+  width : 20,
+  height : 10
+});
+
+
+block.push({
+  x : 750,
+  y : canvas.height - 370,
+  width : 50,
+  height : 10
+});
+
+
+block.push({
+  x : 600,
+  y : canvas.height - 450,
+  width : 60,
+  height : 10
+});
+
+
+block.push({
+  x : 520,
+  y : canvas.height - 500,
+  width : 20,
+  height : 10
+});
+
+
+block.push({
+  x : 270,
+  y : canvas.height - 450,
+  width : 80,
+  height : 10
+});
+
+
+block.push({
+  x : 140,
+  y : canvas.height - 500,
+  width : 90,
+  height : 10
+});
+
+
+block.push({
+  x : 40,
+  y : canvas.height - 500,
+  width : 60,
+  height : 10
+});
+
+// level 2 blocks
 var block1 = [];
 
-// Here I'm creating the second level
 block1.push({
-  x : 150,
-  y : 290,
-  width : 70,
-  height : 10
-});
-
-block1.push({
-  x : 300,
-  y : 230,
-  width : 70,
-  height : 10
-});
-
-block1.push({
-  x : 430,
-  y : 180,
-  width : 70,
-  height : 10
-});
-
-block1.push({
-  x : 350,
-  y : 120,
-  width : 70,
-  height : 10
-});
-
-block1.push({
-  x : 180,
-  y : 140,
-  width : 70,
-  height : 10
-});
-
-block1.push({
-  x : 50,
-  y : 100,
-  width : 40,
-  height : 10
-});
-
-var block2 = [];
-
-// Here I'm creating the second level
-block2.push({
-  x : 150,
-  y : 290,
-  width : 70,
-  height : 10
-});
-
-block2.push({
-  x : 300,
-  y : 230,
-  width : 70,
-  height : 10
-});
-
-block2.push({
-  x : 430,
-  y : 180,
-  width : 70,
-  height : 10
-});
-
-block2.push({
-  x : 350,
-  y : 120,
-  width : 70,
-  height : 10
-});
-
-block2.push({
-  x : 180,
-  y : 140,
-  width : 70,
-  height : 10
-});
-
-block2.push({
-  x : 50,
-  y : 100,
-  width : 40,
+  x : 140,
+  y : canvas.height - 50,
+  width : 20,
   height : 10
 });
