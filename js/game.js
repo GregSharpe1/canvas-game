@@ -63,11 +63,11 @@ canvas.height = height;
 // loding the images to canvas
 
 // player jumping image
-  var kang_jump = new Image();
-  kang_jump.src = "img/player.png";
+  var character = new Image();
+  character.src = "img/player.png";
 // player jumping image inverted
-  var kang_jump_inverted = new Image();
-  kang_jump_inverted.src = "img/player-inverted.png";
+  var character_inverted = new Image();
+  character_inverted.src = "img/player-inverted.png";
 // player running images
   var kang_running = new Image();
   kang_running.src = "img/kangaroo-running.gif";
@@ -83,8 +83,8 @@ canvas.height = height;
 
   // Add Image for Obstacle.
   //tumble weed
-  var obstacle1 = new Image();
-  obstacle1.src = "img/tumbleweed.png";
+  var treasure = new Image();
+  treasure.src = "img/treasure.png";
   // another obstacle.. haven't thought what yet
   var obstacle2 = new Image();
   obstacle2.src = "img/obstacle2.jpg";
@@ -107,14 +107,14 @@ function processUserInput() {
 
   // A LEFT
   if (keys[65] || keys[37]) {
-    kang_jump.src = "img/player-inverted.png";
+    character.src = "img/player-inverted.png";
     if (player.velX < player.speed){
       player.velX--;
     }
   }
   // D RIGHT
   if (keys[68] || keys[39]) {
-    kang_jump.src = "img/player.png";
+    character.src = "img/player.png";
     if (player.velX < player.speed){
       player.velX++;
     }
@@ -185,7 +185,7 @@ for (var i=0; i < block.length; i++) {
 }
  else if (levelNum == 2){
 
-
+    door.y = 100;
      context.fillRect(fBlock.x, fBlock.y, fBlock.width, fBlock.y);
 
   for (var i=0; i < block1.length; i++) {
@@ -240,9 +240,9 @@ else if (levelNum == 3){
 
 
   // Drawing the player
-  context.drawImage(kang_jump, player.x, player.y);
+  context.drawImage(character, player.x, player.y);
 
-  context.drawImage(obstacle1, door.x, door.y);
+  context.drawImage(treasure, door.x, door.y);
 
   if (
   		player.x <= (door.x + 32)
@@ -337,9 +337,9 @@ var reset = function() {
 
 
   // make sure the player's facing the right way
-  kang_jump.src = "img/player.png";
+  character.src = "img/player.png";
 
-  processUserInput();
+
 
   // TODO: Randomly move the door.
 
