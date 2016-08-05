@@ -16,6 +16,11 @@ var levelNum = 1;
 var score = 0;
 // Setup of the game
 
+
+var coin_collect = new Audio("sounds/coin-collect.wav");
+var level_up = new Audio("sounds/level-up.wav");
+var jump = new Audio("sounds/jump.wav");
+
 // Create the canvas from the given element in the HTML
 var canvas = document.getElementById("main"),
     // Give the canvas 2D context
@@ -112,7 +117,7 @@ function processUserInput() {
             player.jumping = true;
             player.grounded = false;
             player.velY = -player.speed * 2;
-
+            jump.play();
         }
     }
 
@@ -182,12 +187,15 @@ function processUserInput() {
 
             if (collect === "l" || collect === "r") {
                 coin_a[j] = 0;
+                coin_collect.play();
                 score++;
             } else if (collect === "b") {
               coin_a[j] = 0;
+              coin_collect.play();
               score++;
             } else if (collect === "t") {
               coin_a[j] = 0;
+              coin_collect.play();
               score++;
             }
 
@@ -220,6 +228,33 @@ function processUserInput() {
         context.drawImage(character, player.x, player.y);
         prize.y = 100;
         context.fillRect(floor.x, floor.y, floor.width, floor.y);
+
+
+        for (var j = 0; j < coin_a1.length; j++) {
+
+            context.drawImage(coin, coin_a1[j].x, coin_a1[j].y, coin_a1[j].width, coin_a1[j].height);
+
+            var collect = colCheck(player, coin_a1[j]);
+
+            if (collect === "l" || collect === "r") {
+                coin_a1[j] = 0;
+                coin_collect.play();
+                score++;
+            } else if (collect === "b") {
+              coin_a1[j] = 0;
+              coin_collect.play();
+              score++;
+            } else if (collect === "t") {
+              coin_a1[j] = 0;
+              coin_collect.play();
+              score++;
+            }
+
+        }
+
+
+
+
 
         for (var i = 0; i < platform1.length; i++) {
 
@@ -294,7 +329,7 @@ function processUserInput() {
     ) {
 
         context.clearRect(0, 0, width, height);
-
+        level_up.play();
         levelNum++;
         player.x = 0;
         player.y = height - 0;
@@ -303,7 +338,9 @@ function processUserInput() {
             player.x = 15;
             player.y = height - 467;
         }
-
+        if (levelNum > 3) {
+          game_over();
+        }
     }
 
     player.x += player.velX;
@@ -316,7 +353,12 @@ function processUserInput() {
     level_counter();
 }
 
+var game_over = function() {
 
+  context.clearRect(0, 0, canvas.width, canvas.height);
+
+
+}
 
 var score_counter = function() {
 
@@ -391,25 +433,6 @@ function colCheck(shapeA, shapeB) {
 }
 
 
-
-
-
-// this function will reset the player to the start position
-var reset = function() {
-
-    // Sets the player to starting point
-
-
-
-    // make sure the player's facing the right way
-    character.src = "img/player.png";
-
-
-
-    // TODO: Randomly move the prize.
-
-}
-
 // This platform is used to create the floor on which
 // the player starts on
 var floor = {
@@ -444,12 +467,48 @@ coin_a.push({
     height: 30
 });
 
+coin_a.push({
+    x: 300,
+    y: canvas.height - 500,
+    width: 30,
+    height: 30
+});
 
+coin_a.push({
+    x: 5,
+    y: canvas.height - 340,
+    width: 30,
+    height: 30
+});
+
+
+var coin_a1 = [];
+
+coin_a1.push({
+    x: 220,
+    y: canvas.height -190,
+    width: 30,
+    height: 30
+});
+
+coin_a1.push({
+    x: 700,
+    y: canvas.height -60,
+    width: 30,
+    height: 30
+});
 
 var platform = [];
 
 // Here i'm creating the first level platforms
 // platform 1
+platform.push({
+    x: 0,
+    y: canvas.height - 300,
+    width: 40,
+    height: 10
+});
+
 platform.push({
     x: 100,
     y: canvas.height - 60,
