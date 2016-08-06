@@ -12,7 +12,7 @@
 var randomXPos = Math.floor(Math.random() * (560 - 105)) + 105;
 var randomSizeY = Math.floor(Math.random() * (60 - 20)) + 20;
 var randomYPos = Math.floor(Math.random() * (560 - 105)) + 105;
-var levelNum = 1;
+var levelNum = 3;
 var score = 0;
 // Setup of the game
 
@@ -20,6 +20,8 @@ var score = 0;
 var coin_collect = new Audio("sounds/coin-collect.wav");
 var level_up = new Audio("sounds/level-up.wav");
 var jump = new Audio("sounds/jump.wav");
+var splash = new Audio("sounds/splash.wav");
+
 
 // Create the canvas from the given element in the HTML
 var canvas = document.getElementById("main"),
@@ -56,10 +58,10 @@ var canvas = document.getElementById("main"),
         width: 30
     },
 
-    badfloor = {
+  water = {
         x: 0,
-        y: height - 5,
-        height: 5,
+        y: canvas.height - 10,
+        height: 10,
         wdith: canvas.width
     },
 
@@ -176,7 +178,7 @@ function processUserInput() {
     if (levelNum == 1) {
         context.drawImage(character, player.x, player.y);
         context.fillRect(floor.x, floor.y, floor.width, floor.y);
-      //  context.drawImage(coin, 50, 50);
+        //  context.drawImage(coin, 50, 50);
 
 
         for (var j = 0; j < coin_a.length; j++) {
@@ -190,13 +192,13 @@ function processUserInput() {
                 coin_collect.play();
                 score++;
             } else if (collect === "b") {
-              coin_a[j] = 0;
-              coin_collect.play();
-              score++;
+                coin_a[j] = 0;
+                coin_collect.play();
+                score++;
             } else if (collect === "t") {
-              coin_a[j] = 0;
-              coin_collect.play();
-              score++;
+                coin_a[j] = 0;
+                coin_collect.play();
+                score++;
             }
 
         }
@@ -241,13 +243,13 @@ function processUserInput() {
                 coin_collect.play();
                 score++;
             } else if (collect === "b") {
-              coin_a1[j] = 0;
-              coin_collect.play();
-              score++;
+                coin_a1[j] = 0;
+                coin_collect.play();
+                score++;
             } else if (collect === "t") {
-              coin_a1[j] = 0;
-              coin_collect.play();
-              score++;
+                coin_a1[j] = 0;
+                coin_collect.play();
+                score++;
             }
 
         }
@@ -282,8 +284,31 @@ function processUserInput() {
 
         context.drawImage(character, player.x, player.y);
 
+        context.fillRect(floor.x, floor.y, floor.width, floor.height);
 
-        context.fillRect(badfloor.x, badfloor.y, badfloor.width, badfloor.height);
+        for (var j = 0; j < coin_a2.length; j++) {
+
+            context.drawImage(coin, coin_a2[j].x, coin_a2[j].y, coin_a2[j].width, coin_a2[j].height);
+
+            var collect = colCheck(player, coin_a2[j]);
+
+            if (collect === "l" || collect === "r") {
+                coin_a2[j] = 0;
+                coin_collect.play();
+                score++;
+            } else if (collect === "b") {
+              coin_a2[j] = 0;
+              coin_collect.play();
+              score++;
+            } else if (collect === "t") {
+              coin_a2[j] = 0;
+              coin_collect.play();
+              score++;
+            }
+
+        }
+
+
 
         for (var i = 0; i < platform2.length; i++) {
 
@@ -302,13 +327,19 @@ function processUserInput() {
                 player.velY *= -1;
             }
 
+            var inWater = colCheck(player, water);
+
+
+
+              if (inWater === "t") {
+              player.x = 15;
+              player.y = height - 467;
+              splash.play();
+            }
+
         }
 
-        var dir33 = colCheck(player, badfloor);
 
-        if (dir33 == "t") {
-            alert("dead");
-        }
         prize.x = 725;
         prize.y = height - 560;
 
@@ -339,7 +370,7 @@ function processUserInput() {
             player.y = height - 467;
         }
         if (levelNum > 3) {
-          game_over();
+            game_over();
         }
     }
 
@@ -355,29 +386,29 @@ function processUserInput() {
 
 var game_over = function() {
 
-  context.clearRect(0, 0, canvas.width, canvas.height);
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
 
 }
 
 var score_counter = function() {
 
-  var c = document.getElementById("main");
-  var ctx = c.getContext("2d");
-  ctx.font = "30px Arial";
-  ctx.fillText("Score: " + score,680,40);
+    var c = document.getElementById("main");
+    var ctx = c.getContext("2d");
+    ctx.font = "30px Arial";
+    ctx.fillText("Score: " + score, 680, 40);
 
 }
 
 var level_counter = function() {
 
-  var c = document.getElementById("main");
-  var ctx = c.getContext("2d");
-  ctx.font = "30px Arial";
-  ctx.fillText("Level: " + levelNum,20,40);
+        var c = document.getElementById("main");
+        var ctx = c.getContext("2d");
+        ctx.font = "30px Arial";
+        ctx.fillText("Level: " + levelNum, 20, 40);
 
-}
-// testing
+    }
+    // testing
 if (levelNum == 3) {
     player.x = 15;
     player.y = height - 467;
@@ -481,22 +512,75 @@ coin_a.push({
     height: 30
 });
 
+// level 2 coins
 
 var coin_a1 = [];
 
 coin_a1.push({
     x: 220,
-    y: canvas.height -190,
+    y: canvas.height - 190,
     width: 30,
     height: 30
 });
 
 coin_a1.push({
     x: 700,
-    y: canvas.height -60,
+    y: canvas.height - 60,
     width: 30,
     height: 30
 });
+
+coin_a1.push({
+    x: 650,
+    y: canvas.height - 450,
+    width: 30,
+    height: 30
+});
+
+coin_a1.push({
+    x: 175,
+    y: canvas.height - 320,
+    width: 30,
+    height: 30
+});
+
+// level 3 coins
+
+var coin_a2 = [];
+
+coin_a2.push({
+    x: 400,
+    y: 200,
+    width: 30,
+    height: 30
+});
+
+coin_a2.push({
+    x: 145,
+    y: 200,
+    width: 30,
+    height: 30
+});
+
+coin_a2.push({
+    x: 765,
+    y: canvas.height - 210,
+    width: 30,
+    height: 30
+});
+
+coin_a2.push({
+    x: 610,
+    y: 110,
+    width: 30,
+    height: 30
+});
+
+
+
+
+
+
 
 var platform = [];
 
@@ -707,6 +791,13 @@ platform1.push({
 var platform2 = [];
 
 // starting position for the player is changing!!!
+
+platform2.push({
+    x: 770,
+    y: canvas.height - 160,
+    width: 60,
+    height: 10
+});
 
 platform2.push({
     x: 0,
