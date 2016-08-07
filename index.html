@@ -1,29 +1,40 @@
 <!DOCTYPE html>
 <html lang='en'>
+
 <head>
-  <meta charset='utf-8'>
-  <title> Jump Block </title>
-  <link rel="stylesheet" property="stylesheet" type="text/css" href="css/style.css"/>
+    <meta charset='utf-8'>
+    <title> Jump Block </title>
+    <link rel="stylesheet" property="stylesheet" type="text/css" href="css/style.css" />
+    <head profile="favicon">
+      <link rel="icon"
+      type="image/png"
+      href="img/favicon.png">
 </head>
 <center>
-<body>
+<div class="container">
+    <body>
 
-<header>
+        <ul>
+          <center>
+          <li><a href="index.html">Play Game</a></li>
+          <li><a href="about.html">About</a></li>
+          </center>
+        </ul>
+        <br>
+
+        Use AWSD or the arrow keys to move and space to jump :)
+
+        <br>
+        <br>
+        <canvas id="main" width="600" height="360" style="border: 1px solid green" tabindex="0" id="main" z-index=0>
 
 
-  Press Tab to Begin, AWSD to move, and space to jump
-  <br>
-</header>
-
-  <canvas id="main" width= "600" height="360" style="border: 1px solid green" tabindex="0" id="main" z-index=0>
-  <canvas id="main" width= "600" height="360" style="border: 1px solid green" id="game_over" z-index=1>
-  <canvas id="main" width= "600" height="360" style="border: 1px solid green" id="score" z-index=2>
-
-    Your browser doesn't support HTML5.
-  </canvas>
+                    Your browser doesn't support HTML5.
+                </canvas>
 </center>
-    <script src="js/game.js">
-    </script>
-
+<script src="js/game.js">
+</script>
+</div>
 </body>
+
 </html>
