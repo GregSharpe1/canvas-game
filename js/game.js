@@ -96,6 +96,12 @@ coin.src = "img/coin.png";
 var treasure = new Image();
 treasure.src = "img/treasure.png";
 
+var water_img = new Image();
+water_img.src = "img/water.png";
+
+var wood_img = new Image();
+wood_img.src = "img/wood.png";
+
 // this will be the main function where bsically everything will
 // happen. From placing the images to playing the sounds.
 // this function will take user input
@@ -216,7 +222,7 @@ function processUserInput() {
         for (var i = 0; i < platform.length; i++) {
 
 
-            context.fillRect(platform[i].x, platform[i].y, platform[i].width, platform[i].height);
+            context.drawImage(wood_img,platform[i].x, platform[i].y, platform[i].width, platform[i].height);
 
 
             var dir = checkCollisions(player, platform[i]);
@@ -268,7 +274,7 @@ function processUserInput() {
 
         for (var i = 0; i < platform1.length; i++) {
 
-            context.fillRect(platform1[i].x, platform1[i].y, platform1[i].width, platform1[i].height);
+            context.drawImage(wood_img, platform1[i].x, platform1[i].y, platform1[i].width, platform1[i].height);
 
 
             var dir2 = checkCollisions(player, platform1[i]);
@@ -294,8 +300,8 @@ function processUserInput() {
 
         context.fillRect(floor.x, floor.y, floor.width, floor.y);
 
-
-        context.fillRect(water.x,water.y,water.width,50);
+        bg.src = "img/bg3.png";
+        context.drawImage(water_img,water.x,water.y,water.width,50);
 
         for (var j = 0; j < coin_a2.length; j++) {
 
@@ -323,7 +329,7 @@ function processUserInput() {
 
         for (var i = 0; i < platform2.length; i++) {
 
-            context.fillRect(platform2[i].x, platform2[i].y, platform2[i].width, platform2[i].height);
+            context.drawImage(wood_img,platform2[i].x, platform2[i].y, platform2[i].width, platform2[i].height);
 
 
             var dir3 = checkCollisions(player, platform2[i]);
