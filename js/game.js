@@ -4,19 +4,15 @@
     window.requestAnimationFrame = requestAnimationFrame;
 })();
 
-
-// Generate a number between 105 and 560.
-// why? in the documentation.
-
-// Math.floor(Math.random() * (max value - min value)) + min value;
-var randomXPos = Math.floor(Math.random() * (560 - 105)) + 105;
-var randomSizeY = Math.floor(Math.random() * (60 - 20)) + 20;
-var randomYPos = Math.floor(Math.random() * (560 - 105)) + 105;
-var levelNum = 3;
+// setup for the global varaibles
+// this will hold the current level number
+var levelNum = 1;
+// current score of the player
 var score = 0;
-// Setup of the game
+// holding the varaible for the sound toggle
+var sound = true;
 
-
+// Importing all of the sounds used
 var coin_collect = new Audio("sounds/coin-collect.wav");
 var level_up = new Audio("sounds/level-up.wav");
 var jump = new Audio("sounds/jump.wav");
@@ -28,28 +24,31 @@ var canvas = document.getElementById("main"),
     // Give the canvas 2D context
     context = canvas.getContext("2d"),
 
-    // Set the canvas with boundaries
-    // to allow the user not to go outside
-    // the boundaries
+// setting the hieght and width of the canvas
     height = 600,
     width = 800,
 
-    // Create the player giving some config
+// Create the player giving some config
     player = {
-        // this is where the player will start
+// this is where the player will start
         x: 30,
         y: height - 50,
+// How tall and wide the player is
         height: 50,
         width: 30,
+// speed of which the player moves
         speed: 3,
         velX: 0,
         velY: 0,
+// create a varabile for jumping
         jumping: false,
+// create a variable for if the player is grounded or not
         grounded: false
     },
 
 
-
+// this declares the inital location, height and width of the
+// treasure chest.
     prize = {
         // this is where the 'prize' (obstacles) will be placed.
         x: 50,
@@ -58,11 +57,12 @@ var canvas = document.getElementById("main"),
         width: 30
     },
 
+// this will be used to create the layer of water on level 3
   water = {
         x: 0,
-        y: canvas.height - 10,
+        y: height - 50,
         height: 10,
-        wdith: canvas.width
+        width: 800
     },
 
     // Array to hold the keys
@@ -83,31 +83,22 @@ character.src = "img/player.png";
 // player jumping image inverted
 var character_inverted = new Image();
 character_inverted.src = "img/player-inverted.png";
-// player running images
-var kang_running = new Image();
-kang_running.src = "img/kangaroo-running.gif";
-
-// player running images inverted
-var kang_running_inverted = new Image();
-kang_running_inverted.src = "img/kang-running-inverted.gif";
 
 // background images
 var bg = new Image();
-bg.src = "img/background.png";
+bg.src = "img/bg.png";
 
 // coin images
 var coin = new Image();
 coin.src = "img/coin.png";
 
-// Add Image for Obstacle.
-//tumble weed
+// treasure
 var treasure = new Image();
 treasure.src = "img/treasure.png";
-// another obstacle.. haven't thought what yet
-var obstacle2 = new Image();
-obstacle2.src = "img/obstacle2.jpg";
 
-
+// this will be the main function where bsically everything will
+// happen. From placing the images to playing the sounds.
+// this function will take user input
 
 // this function will process keypresses
 function processUserInput() {
@@ -138,42 +129,54 @@ function processUserInput() {
         }
     }
 
+
     player.velX *= friction;
     player.velY += gravity;
 
 
     // Creating a border for the player not to
-    // escape
+    // escape on the x axis
     if (player.x >= width - player.width) {
         player.x = width - player.width;
     } else if (player.x <= 0) {
         player.x = 0;
     }
 
+    // Creating a border for the player not to
+    // escape on the y axis
     if (player.y >= height - player.height) {
         player.y = height - player.height;
         player.jumping = false;
     }
 
+    // set the grounded variable to false
     player.grounded = false;
 
 
     // Clear the context
     context.clearRect(0, 0, width, height);
 
-    // drawing the character
-    var dir1 = colCheck(player, floor);
-    if (dir1 === "l" || dir1 === "r") {
+    // this function will check that I can jump
+    // and move when on top of the floor
+
+    var floorCollision = checkCollisions(player, floor);
+
+    // left or right
+    if (floorCollision === "l" || floorCollision === "r") {
         player.velX = 0;
         player.jumping = false;
-    } else if (dir1 === "b") {
+    // collision on the bottom
+    } else if (floorCollision === "b") {
         player.grounded = true;
         player.jumping = false;
-    } else if (dir1 === "t") {
+    // collision on the top
+    } else if (floorCollision === "t") {
         player.velY *= -1;
     }
 
+    // this big if statement is for
 
+    context.drawImage(bg, 0, 0);
 
     if (levelNum == 1) {
         context.drawImage(character, player.x, player.y);
@@ -181,11 +184,16 @@ function processUserInput() {
         //  context.drawImage(coin, 50, 50);
 
 
+        // this for loop is repeated in each levelNum if statement.
+        // therefor I will make a general comment about this loop
+
+        // This loop draw the coins based on the positions set below
+        // it also check for collisions using the checkcol
         for (var j = 0; j < coin_a.length; j++) {
 
             context.drawImage(coin, coin_a[j].x, coin_a[j].y, coin_a[j].width, coin_a[j].height);
 
-            var collect = colCheck(player, coin_a[j]);
+            var collect = checkCollisions(player, coin_a[j]);
 
             if (collect === "l" || collect === "r") {
                 coin_a[j] = 0;
@@ -211,7 +219,7 @@ function processUserInput() {
             context.fillRect(platform[i].x, platform[i].y, platform[i].width, platform[i].height);
 
 
-            var dir = colCheck(player, platform[i]);
+            var dir = checkCollisions(player, platform[i]);
 
             if (dir === "l" || dir === "r") {
                 player.velX = 0;
@@ -236,7 +244,7 @@ function processUserInput() {
 
             context.drawImage(coin, coin_a1[j].x, coin_a1[j].y, coin_a1[j].width, coin_a1[j].height);
 
-            var collect = colCheck(player, coin_a1[j]);
+            var collect = checkCollisions(player, coin_a1[j]);
 
             if (collect === "l" || collect === "r") {
                 coin_a1[j] = 0;
@@ -263,7 +271,7 @@ function processUserInput() {
             context.fillRect(platform1[i].x, platform1[i].y, platform1[i].width, platform1[i].height);
 
 
-            var dir2 = colCheck(player, platform1[i]);
+            var dir2 = checkCollisions(player, platform1[i]);
 
             if (dir2 === "l" || dir2 === "r") {
                 player.velX = 0;
@@ -284,13 +292,16 @@ function processUserInput() {
 
         context.drawImage(character, player.x, player.y);
 
-        context.fillRect(floor.x, floor.y, floor.width, floor.height);
+        context.fillRect(floor.x, floor.y, floor.width, floor.y);
+
+
+        context.fillRect(water.x,water.y,water.width,50);
 
         for (var j = 0; j < coin_a2.length; j++) {
 
             context.drawImage(coin, coin_a2[j].x, coin_a2[j].y, coin_a2[j].width, coin_a2[j].height);
 
-            var collect = colCheck(player, coin_a2[j]);
+            var collect = checkCollisions(player, coin_a2[j]);
 
             if (collect === "l" || collect === "r") {
                 coin_a2[j] = 0;
@@ -315,7 +326,7 @@ function processUserInput() {
             context.fillRect(platform2[i].x, platform2[i].y, platform2[i].width, platform2[i].height);
 
 
-            var dir3 = colCheck(player, platform2[i]);
+            var dir3 = checkCollisions(player, platform2[i]);
 
             if (dir3 === "l" || dir3 === "r") {
                 player.velX = 0;
@@ -327,11 +338,10 @@ function processUserInput() {
                 player.velY *= -1;
             }
 
-            var inWater = colCheck(player, water);
-
-
+            var inWater = checkCollisions(player, water);
 
               if (inWater === "t") {
+              score--;
               player.x = 15;
               player.y = height - 467;
               splash.play();
@@ -369,36 +379,68 @@ function processUserInput() {
             player.x = 15;
             player.y = height - 467;
         }
-        if (levelNum > 3) {
-            game_over();
-        }
+
     }
+
+    // add velocity to the current players position
+    // in both X and Y positions
 
     player.x += player.velX;
     player.y += player.velY;
 
+    // if the varaible levelNum is over three
+    // call the game over function
+
+    if (levelNum > 3) {
+        game_over();
+    }
 
     // refresh the page
     window.requestAnimationFrame(processUserInput);
+    // run the score_counter function
     score_counter();
+    // run the level_counter function
     level_counter();
 }
 
+// this function will completely clear the canvas and
+// place the final score onto the canvas.
+
 var game_over = function() {
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
 
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(bg,0,0);
+    var c = document.getElementById("main");
+    var ctx = c.getContext("2d");
+    ctx.font = "50px Arial";
+    ctx.fillText("You finished with a score of: " + score, 60, 300);
+
+    score_counter.ctx.clearRect(0,0,canvas.width, canvas.height);
 
 }
+
+// testing
+
+
+// this function is used to display the current score of
+// the player. It does this by simply adding one to the
+// global varaible 'score' every time a coin is collected
 
 var score_counter = function() {
 
     var c = document.getElementById("main");
     var ctx = c.getContext("2d");
     ctx.font = "30px Arial";
-    ctx.fillText("Score: " + score, 680, 40);
+    ctx.fillText("Score: " + score, 650, 40);
 
 }
+
+// This function displays the current level on the
+// top left of the canvas. It does this by grabbing
+// and writing out the global variable 'levelNum'.
+// the level number is increased every time I
+// move onto the next level or "collect the treasure".
 
 var level_counter = function() {
 
@@ -408,11 +450,6 @@ var level_counter = function() {
         ctx.fillText("Level: " + levelNum, 20, 40);
 
     }
-    // testing
-if (levelNum == 3) {
-    player.x = 15;
-    player.y = height - 467;
-}
 
 
 // lsiten for key presses down
@@ -428,7 +465,14 @@ window.addEventListener("load", function() {
     processUserInput();
 });
 
-function colCheck(shapeA, shapeB) {
+// this function will check whether or not there has been a
+// collosion between shapeA and shapeB. The function works by
+// taking the positions of each shape in this case. and finding
+// out if they overlap. If so, collision is detected and with
+// code above I have used that to allow the player to jump
+// onto the platforms, collect coins and move onto the next level.
+
+function checkCollisions(shapeA, shapeB) {
 
     var vX = (shapeA.x + (shapeA.width / 2)) - (shapeB.x + (shapeB.width / 2)),
         vY = (shapeA.y + (shapeA.height / 2)) - (shapeB.y + (shapeB.height / 2)),
@@ -463,6 +507,11 @@ function colCheck(shapeA, shapeB) {
     return colDir;
 }
 
+
+// The below code is giving parameters to the
+// platforms that the player jumps on
+// it is also giving positions of where each
+// coin or platform should be placed.
 
 // This platform is used to create the floor on which
 // the player starts on
@@ -784,9 +833,6 @@ platform1.push({
     height: 10
 });
 
-// prize position for this level
-// x : 30
-// y : canvas.height - 300
 
 var platform2 = [];
 
@@ -883,5 +929,3 @@ platform2.push({
     width: 50,
     height: 10
 });
-
-// prize position
